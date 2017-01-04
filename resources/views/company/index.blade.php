@@ -9,7 +9,7 @@
 </head>
 <body>
     <h1>add new Employee</h1>
-    <form action="">
+    <form action="{!! route('employee.create') !!}" method="get">
         <label for="first_name">First Name</label><br>
         <input type="text" id="first_name" name="first_name"><br>
         <label for="last_name">Last Name</label><br>

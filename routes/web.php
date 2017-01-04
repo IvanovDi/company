@@ -17,3 +17,5 @@ Route::get('/', function () {
 Route::get('view', function () {
     return view('company.index');
 });
+
+Route::resource('employee', 'EmployeeController');
