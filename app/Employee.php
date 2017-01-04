@@ -15,4 +15,9 @@ class Employee extends Model
     {
         return $this->belongsToMany('App/Position');
     }
+
+    public function groups()
+    {
+        return $this->belongsTo('App/Group');
+    }
 }
