@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Employee;
 
 class Position extends Model
 {
@@ -10,8 +11,8 @@ class Position extends Model
         'name'
     ];
 
-    public function positions()
+    public function employees()
     {
-        return $this->belongsToMany('App/Employee');
+        return $this->belongsToMany('App\Employee', 'employee_position')->withTimestamps();
     }
 }
