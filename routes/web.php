@@ -11,11 +11,8 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-Route::get('view', function () {
-    return view('company.index');
-});
-
 Route::resource('employee', 'EmployeeController');
+
+Route::resource('position', 'PositionController');
+
+Route::resource('group', 'GroupController');

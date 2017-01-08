@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Position;
-use Group;
+
 
 class Employee extends Model
 {
@@ -12,7 +12,8 @@ class Employee extends Model
         'first_name',
         'last_name',
         'group_id',
-        'position_id'
+        'position_id',
+        'relation'
     ];
 
     public function positions()
@@ -20,8 +21,8 @@ class Employee extends Model
         return $this->belongsToMany('App\Position', 'employee_position')->withTimestamps();
     }
 
-    public function groups()
+    public function group()
     {
-        return $this->belongsTo('App\Group');
+        return $this->belongsTo(Group::class);
     }
 }

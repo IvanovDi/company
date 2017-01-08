@@ -3,7 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Employee;
+
 
 class Group extends Model
 {
@@ -13,7 +13,7 @@ class Group extends Model
 
     public function employees()
     {
-        return $this->hasMany('App\Employee');
+        return $this->hasMany(Employee::class);
     }
 
 }
