@@ -11,6 +11,21 @@
     <title>Document</title>
 </head>
 <body>
+<?php
+function hasRelations($relations, $name)
+{
+    foreach ($relations[$name] as $employee) {
+        echo "<li>" . $employee;
+        if ($relations[$employee]) {
+            echo '<ul>';
+            hasRelations($relations, $employee);
+            echo '</ul>';
+        }
+        echo '</li>';
+    }
+}
+
+?>
     <div class="container">
         <div id="data">
             <ul>
@@ -21,6 +36,28 @@
                         <ul>
                             <li>{!! $item->group->name !!}</li>
                             <li>{!! $item->positions[0]->name !!}</li>
+
+                            @if($relations[$item->first_name])
+                                <li>
+                                    Relation
+                                    <ul>
+                                        {{ hasRelations($relations, $item->first_name) }}
+                                        {{--@foreach($relations[$item->first_name] as $employee)--}}
+                                            {{--<li>--}}
+                                                {{--{!! $employee !!}--}}
+                                                {{--@if($relations[$employee])--}}
+                                                    {{--<ul>--}}
+                                                        {{--@foreach($relations[$employee] as $employee)--}}
+                                                            {{--<li>{!! $employee !!}</li>--}}
+                                                        {{--@endforeach--}}
+                                                    {{--</ul>--}}
+                                                {{--@endif--}}
+                                            {{--</li>--}}
+                                        {{--@endforeach--}}
+                                    </ul>
+                                </li>
+                            @endif
+
                         </ul>
                     </li>
                     @endif

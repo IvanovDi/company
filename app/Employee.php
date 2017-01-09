@@ -25,4 +25,9 @@ class Employee extends Model
     {
         return $this->belongsTo(Group::class);
     }
+
+    public function relations()
+    {
+        return $this->hasMany(Employee::class, 'relation');
+    }
 }

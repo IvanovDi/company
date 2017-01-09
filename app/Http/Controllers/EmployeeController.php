@@ -33,12 +33,16 @@ class EmployeeController extends Controller
         $group_id = Group::where('name', $request['group'])->get();
         $group_id = $group_id[0]->id;
         $arr_name  = explode(' ', $request['relation']);
-        $relation = Employee::where('first_name', $arr_name[0])->where('last_name', $arr_name[1])->get();
+        if($arr_name[0]) {
+            $relation = Employee::where('first_name', $arr_name[0])->where('last_name', $arr_name[1])->get()[0]->id;
+        } else {
+            $relation = null;
+        }
         $employee =  Employee::create([
             'first_name' => $request->input('first_name'),
             'last_name' => $request->input('last_name'),
             'group_id' => $group_id,
-            'relation' => $relation[0]->id
+            'relation' => $relation
          ]);
         $position = Position::where('name', $request['position'])->get();
         $employee->positions()->attach($position[0]->id);
@@ -47,11 +51,29 @@ class EmployeeController extends Controller
         return redirect('employee');
     }
 
+    protected function relation()
+    {   $arr_relations = [];
+        $res = Employee::with('relations')->get();
+        foreach($res  as $item) {
+            $name = $item->first_name;
+            $tmp_arr = [];
+            foreach($item->relations as $result) {
+                $tmp_arr[] = $result->first_name;
+            }
+            $arr_relations[$name] = $tmp_arr;
+        }
+        return $arr_relations;
+    }
+
+
+
+
 
     public function show($id)
     {
+        $relation = $this->relation();
         $res = Employee::with('group', 'positions')->get();
-        return view('company.show', ['data' => $res]);
+        return view('company.show', ['data' => $res, 'relations' => $relation]);
     }
 
 

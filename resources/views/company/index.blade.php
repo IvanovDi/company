@@ -21,21 +21,22 @@
                     <input type="text" id="last_name" name="last_name"><br>
                     <label for="relation">Relation</label><br>
                     <select name="relation"  id="relation">
+                        <option selected value=""></option>
                         @foreach($relations as $relation)
-                            <option>{!! $relation->first_name . ' ' . $relation->last_name !!} </option>
+                            <option name="{!! $relation->first_name . ' ' . $relation->last_name !!}">{!! $relation->first_name . ' ' . $relation->last_name !!} </option>
                         @endforeach
                     </select><br>
 
                     <label for="position">Position</label><br>
                      <select name="position"  id="position">
                         @foreach($positions as $position)
-                             <option>{!! $position->name !!} </option>
+                             <option name="{!! $position->name !!}">{!! $position->name !!} </option>
                         @endforeach
                     </select><br>
                     <label for="group">Select Group</label><br>
                     <select name="group"  id="group">
                         @foreach($groups as $group)
-                            <option>{!! $group->name !!}</option>
+                            <option name="{!! $group->name !!}">{!! $group->name !!}</option>
                         @endforeach
                     </select><br><br>
                     <input type="submit" name="submit" value="add new">
