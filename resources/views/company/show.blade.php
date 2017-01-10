@@ -6,24 +6,24 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="/css/app.css" rel="stylesheet">
-    <link rel="stylesheet" href="/css/vakata-jstree-9770c67/dist/themes/default/style.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <title>Document</title>
 </head>
 <body>
 <?php
-function hasRelations($relations, $name)
-{
-    foreach ($relations[$name] as $employee) {
-        echo "<li>" . $employee;
-        if ($relations[$employee]) {
-            echo '<ul>';
-            hasRelations($relations, $employee);
-            echo '</ul>';
+    function hasRelations($relations, $name)
+    {
+        foreach ($relations[$name] as $employee) {
+            echo "<li>" . $employee;
+                if ($relations[$employee]) {
+                    echo '<ul>';
+                    hasRelations($relations, $employee);
+                    echo '</ul>';
+                }
+            echo '</li>';
         }
-        echo '</li>';
     }
-}
 
 ?>
     <div class="container">
@@ -72,6 +72,6 @@ function hasRelations($relations, $name)
             });
         });
     </script>
-    <script src="/css/vakata-jstree-9770c67/dist/jstree.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
 </body>
 </html>
