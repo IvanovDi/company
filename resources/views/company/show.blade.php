@@ -15,16 +15,22 @@
     function hasRelations($relations, $name)
     {
         foreach ($relations[$name] as $employee) {
-            echo "<li>" . $employee;
-                if ($relations[$employee]) {
+            $name = $employee->first_name;
+
+            if($employee instanceof App\Employee) {
+                echo "<li>" . $employee->first_name . ' ' . $employee->last_name;
+            } else {
+                echo "<li>" . $employee->name;
+            }
+                if (!empty($relations[$name])) {
                     echo '<ul>';
-                    hasRelations($relations, $employee);
+                        hasRelations($relations, $name);
                     echo '</ul>';
+                    echo '</li>';
                 }
-            echo '</li>';
         }
     }
-
+    $myFunction = 'hasRelations';
 ?>
     <div class="container">
         <div id="data">
@@ -34,26 +40,14 @@
                     <li>
                         {!! $item->first_name . ' ' . $item->last_name!!}
                         <ul>
-                            <li>{!! $item->group->name !!}</li>
-                            <li>{!! $item->positions[0]->name !!}</li>
+                            <li>group - {!! $item->group->name ? $item->group->name : " " !!}</li>
+                            <li>position - {!! $item->positions[0]->name !!}</li>
 
                             @if($relations[$item->first_name])
                                 <li>
                                     Relation
                                     <ul>
-                                        {{ hasRelations($relations, $item->first_name) }}
-                                        {{--@foreach($relations[$item->first_name] as $employee)--}}
-                                            {{--<li>--}}
-                                                {{--{!! $employee !!}--}}
-                                                {{--@if($relations[$employee])--}}
-                                                    {{--<ul>--}}
-                                                        {{--@foreach($relations[$employee] as $employee)--}}
-                                                            {{--<li>{!! $employee !!}</li>--}}
-                                                        {{--@endforeach--}}
-                                                    {{--</ul>--}}
-                                                {{--@endif--}}
-                                            {{--</li>--}}
-                                        {{--@endforeach--}}
+                                        {{ $myFunction($relations, $item->first_name) }}
                                     </ul>
                                 </li>
                             @endif

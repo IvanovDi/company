@@ -6,9 +6,11 @@ use App\Employee;
 use App\Group;
 use App\Position;
 use Illuminate\Http\Request;
+use phpDocumentor\Reflection\Types\Array_;
 
 class EmployeeController extends Controller
 {
+
     public function index()
     {
         $position = Position::all();
@@ -21,11 +23,11 @@ class EmployeeController extends Controller
         ]);
     }
 
-
-    public function create(Request $request)
-    {
-
-    }
+//todo
+//    public function create(Request $request)
+//    {
+//
+//    }
 
 
     public function store(Request $request)
@@ -53,19 +55,26 @@ class EmployeeController extends Controller
 
     protected function relation()
     {   $arr_relations = [];
-        $res = Employee::with('relations')->get();
+        $res = Employee::with('relations', 'relationGroup')->get();
+        $groups = Group::with('employees')->get();
         foreach($res  as $item) {
             $name = $item->first_name;
+            $tmp_group_arr = [];
+            if($item->relationGroup) {
+                $group = $item->relationGroup;
+                foreach($group as $items) {
+                    $tmp_group_arr[] = $items;
+                }
+            }
             $tmp_arr = [];
             foreach($item->relations as $result) {
-                $tmp_arr[] = $result->first_name;
+                $tmp_arr[] = $result;
             }
-            $arr_relations[$name] = $tmp_arr;
+            $arr_relations[$name] = array_merge($tmp_arr, $tmp_group_arr);
         }
+        dd($arr_relations);
         return $arr_relations;
     }
-
-
 
 
 
@@ -73,24 +82,25 @@ class EmployeeController extends Controller
     {
         $relation = $this->relation();
         $res = Employee::with('group', 'positions')->get();
+//        dd($res);
         return view('company.show', ['data' => $res, 'relations' => $relation]);
     }
 
-
-    public function edit($id)
-    {
-        //
-    }
-
-
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-
-    public function destroy($id)
-    {
-        //
-    }
+//todo
+//    public function edit($id)
+//    {
+//        //
+//    }
+//
+//
+//    public function update(Request $request, $id)
+//    {
+//        //
+//    }
+//
+//
+//    public function destroy($id)
+//    {
+//        //
+//    }
 }

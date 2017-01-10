@@ -68,7 +68,14 @@
                     <form action="{!! route('group.store')!!}" method="post">
                         {{csrf_field()}}
                         <label for="group">title group</label>
-                        <input type="text" id="group" name="group_name">
+                        <br><input type="text" id="group" name="group_name"><br>
+                        <label for="relation">Relation</label><br>
+                        <select name="relation"  id="relation">
+                            <option selected value=""></option>
+                            @foreach($relations as $relation)
+                                <option name="{!! $relation->first_name . ' ' . $relation->last_name !!}">{!! $relation->first_name . ' ' . $relation->last_name !!} </option>
+                            @endforeach
+                        </select><br>
                         <input type="submit" value="add">
                     </form>
                 </div>

@@ -30,4 +30,9 @@ class Employee extends Model
     {
         return $this->hasMany(Employee::class, 'relation');
     }
+
+    public function relationGroup()
+    {
+        return $this->hasMany(Group::class, 'relation');
+    }
 }

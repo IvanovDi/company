@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Employee;
 use App\Group;
 use Illuminate\Http\Request;
 
@@ -13,20 +14,22 @@ class GroupController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        //
-    }
+//todo
+//    public function index()
+//    {
+//        //
+//    }
 
     /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        //
-    }
+//todo
+//    public function create()
+//    {
+//        //
+//    }
 
     /**
      * Store a newly created resource in storage.
@@ -36,8 +39,15 @@ class GroupController extends Controller
      */
     public function store(Request $request)
     {
+        $arr_name  = explode(' ', $request['relation']);
+        if($arr_name[0]) {
+            $relation = Employee::where('first_name', $arr_name[0])->where('last_name', $arr_name[1])->get()[0]->id;
+        } else {
+            $relation = null;
+        }
         Group::create([
-            'name' => $request['group_name']
+            'name' => $request['group_name'],
+            'relation' => $relation
         ]);
         return redirect('employee');
     }
@@ -50,7 +60,9 @@ class GroupController extends Controller
      */
     public function show($id)
     {
+//        $relations = Employee::with('employees')->get();
         $res = Group::with('employees')->get();
+        dd($res);
         return view('company.group', ['data' => $res]);
     }
 
@@ -60,10 +72,11 @@ class GroupController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
-        //
-    }
+//todo
+//    public function edit($id)
+//    {
+//        //
+//    }
 
     /**
      * Update the specified resource in storage.
@@ -72,10 +85,11 @@ class GroupController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
-        //
-    }
+//todo
+//    public function update(Request $request, $id)
+//    {
+//        //
+//    }
 
     /**
      * Remove the specified resource from storage.
@@ -83,8 +97,9 @@ class GroupController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-        //
-    }
+//todo
+//    public function destroy($id)
+//    {
+//        //
+//    }
 }

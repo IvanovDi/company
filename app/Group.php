@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Group extends Model
 {
     protected $fillable = [
-        'name'
+        'name',
+        'relation'
     ];
 
     public function employees()
@@ -16,4 +17,8 @@ class Group extends Model
         return $this->hasMany(Employee::class);
     }
 
+    public function relations()
+    {
+        return $this->belongsTo(Employee::class, 'relation');
+    }
 }
