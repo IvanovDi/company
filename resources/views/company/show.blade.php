@@ -15,9 +15,15 @@
     function hasRelations($relations, $name, $groups)
     {
         foreach ($relations[$name] as $employee) {
+
             if($employee instanceof App\Employee) {
                 $name = $employee->first_name;
-                echo "<li>" . $employee->first_name . ' ' . $employee->last_name;
+                if ($employee->team_lead) {
+                    $team_lead = '<span style="color:red;"> team lead </span>';
+                } else {
+                    $team_lead = ' ';
+                }
+                echo "<li> people - " . $employee->first_name . ' ' . $employee->last_name . $team_lead;
                 if (!empty($relations[$name])) {
                     echo '<ul>';
                     hasRelations($relations, $name, $groups);
@@ -27,10 +33,16 @@
             }
             if(!empty($employee[0])){
                 foreach($employee as $empl) {
-                    echo "<li>" . $empl->name;
+                    echo "<li> group - " . $empl->name;
                     $name = $empl->name;
+
                     foreach($empl->employees as $result) {
-                        echo "<ul><li>" . $result->first_name . "</li></ul>";
+                        if ($result->team_lead) {
+                            $team_lead = '<span style="color:red;"> team lead </span>';
+                        } else {
+                            $team_lead = ' ';
+                        }
+                        echo "<ul><li> people - " . $result->first_name . ' ' . $team_lead . "</li></ul>";
                     }
 //                    if (!empty($relations[$name])) {
 //                        echo '<ul>';
@@ -49,19 +61,18 @@
             <ul>
                 @foreach($data as $item)
                     @if($item->relation === null)
+                        @if ($item->team_lead)
+                        <?php $team_lead = '<span style="color:red;"> team lead </span>'; ?>
+                        @else
+                            <?php $team_lead = ' '; ?>
+                        @endif
                     <li>
-                        {!! $item->first_name . ' ' . $item->last_name!!}
+                        {!! $item->first_name . ' ' . $item->last_name . '('. $item->positions[0]->name .')' . $team_lead!!}
                         <ul>
-                            <li>group - {!! $item->group->name ? $item->group->name : " " !!}</li>
-                            <li>position - {!! $item->positions[0]->name !!}</li>
-                            @if($relations[$item->first_name])
-                                <li>
-                                    Relation
-                                    <ul>
-                                        {{ hasRelations($relations, $item->first_name, $groups) }}
-                                    </ul>
-                                </li>
-                            @endif
+                                @if($relations[$item->first_name])
+                                {{ hasRelations($relations, $item->first_name, $groups) }}
+                                @endif
+
                         </ul>
                     </li>
                     @endif

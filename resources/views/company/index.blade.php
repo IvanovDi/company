@@ -38,7 +38,10 @@
                         @foreach($groups as $group)
                             <option name="{!! $group->name !!}">{!! $group->name !!}</option>
                         @endforeach
-                    </select><br><br>
+                    </select><br>
+                    <label for="team_lead">Team Lead</label><br>
+                    <input type="checkbox" id="team_lead" name="team_lead"><br>
+                    <br>
                     <input type="submit" name="submit" value="add new">
                 </form>
             </div>

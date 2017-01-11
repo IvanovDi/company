@@ -13,7 +13,8 @@ class Employee extends Model
         'last_name',
         'group_id',
         'position_id',
-        'relation'
+        'relation',
+        'team_lead'
     ];
 
     public function positions()

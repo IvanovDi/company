@@ -32,6 +32,7 @@ class EmployeeController extends Controller
 
     public function store(Request $request)
     {
+        $team_lead = $request->input('team_lead') ? true : false;
         $group_id = Group::where('name', $request['group'])->get();
         $group_id = $group_id[0]->id;
         $arr_name  = explode(' ', $request['relation']);
@@ -44,7 +45,8 @@ class EmployeeController extends Controller
             'first_name' => $request->input('first_name'),
             'last_name' => $request->input('last_name'),
             'group_id' => $group_id,
-            'relation' => $relation
+            'relation' => $relation,
+            'team_lead' => $team_lead
          ]);
         $position = Position::where('name', $request['position'])->get();
         $employee->positions()->attach($position[0]->id);
