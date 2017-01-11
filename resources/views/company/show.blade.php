@@ -12,25 +12,37 @@
 </head>
 <body>
 <?php
-    function hasRelations($relations, $name)
+    function hasRelations($relations, $name, $groups)
     {
         foreach ($relations[$name] as $employee) {
-            $name = $employee->first_name;
-
             if($employee instanceof App\Employee) {
+                $name = $employee->first_name;
                 echo "<li>" . $employee->first_name . ' ' . $employee->last_name;
-            } else {
-                echo "<li>" . $employee->name;
-            }
                 if (!empty($relations[$name])) {
                     echo '<ul>';
-                        hasRelations($relations, $name);
+                    hasRelations($relations, $name, $groups);
                     echo '</ul>';
                     echo '</li>';
                 }
+            }
+            if(!empty($employee[0])){
+                foreach($employee as $empl) {
+                    echo "<li>" . $empl->name;
+                    $name = $empl->name;
+                    foreach($empl->employees as $result) {
+                        echo "<ul><li>" . $result->first_name . "</li></ul>";
+                    }
+//                    if (!empty($relations[$name])) {
+//                        echo '<ul>';
+//                        hasRelations($relations, $name, $groups);
+//                        echo '</ul>';
+//                        echo '</li>';
+//                    }
+                }
+
+            }
         }
     }
-    $myFunction = 'hasRelations';
 ?>
     <div class="container">
         <div id="data">
@@ -42,16 +54,14 @@
                         <ul>
                             <li>group - {!! $item->group->name ? $item->group->name : " " !!}</li>
                             <li>position - {!! $item->positions[0]->name !!}</li>
-
                             @if($relations[$item->first_name])
                                 <li>
                                     Relation
                                     <ul>
-                                        {{ $myFunction($relations, $item->first_name) }}
+                                        {{ hasRelations($relations, $item->first_name, $groups) }}
                                     </ul>
                                 </li>
                             @endif
-
                         </ul>
                     </li>
                     @endif

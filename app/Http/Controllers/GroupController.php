@@ -62,7 +62,6 @@ class GroupController extends Controller
     {
 //        $relations = Employee::with('employees')->get();
         $res = Group::with('employees')->get();
-        dd($res);
         return view('company.group', ['data' => $res]);
     }
 

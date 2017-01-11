@@ -56,23 +56,23 @@ class EmployeeController extends Controller
     protected function relation()
     {   $arr_relations = [];
         $res = Employee::with('relations', 'relationGroup')->get();
-        $groups = Group::with('employees')->get();
         foreach($res  as $item) {
             $name = $item->first_name;
             $tmp_group_arr = [];
             if($item->relationGroup) {
                 $group = $item->relationGroup;
                 foreach($group as $items) {
-                    $tmp_group_arr[] = $items;
+                    $tmp_group_arr[$items->name] = $items->with('employees')->where('name', $items->name)->get();
                 }
             }
             $tmp_arr = [];
             foreach($item->relations as $result) {
-                $tmp_arr[] = $result;
+
+                $tmp_arr[$result->first_name] = $result;
             }
             $arr_relations[$name] = array_merge($tmp_arr, $tmp_group_arr);
         }
-        dd($arr_relations);
+//        dd($arr_relations);
         return $arr_relations;
     }
 
@@ -82,8 +82,12 @@ class EmployeeController extends Controller
     {
         $relation = $this->relation();
         $res = Employee::with('group', 'positions')->get();
-//        dd($res);
-        return view('company.show', ['data' => $res, 'relations' => $relation]);
+        $groups = Group::with('employees')->get();
+        return view('company.show', [
+            'data' => $res,
+            'relations' => $relation,
+            'groups' => $groups
+        ]);
     }
 
 //todo
