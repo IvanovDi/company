@@ -12,10 +12,10 @@
 </head>
 <body>
 <?php
-    function hasRelations($relations, $name, $groups)
+    function hasRelations($relations, $name)
     {
         foreach ($relations[$name] as $employee) {
-
+            $tmp_employee = '';
             if($employee instanceof App\Employee) {
                 $name = $employee->first_name;
                 if ($employee->team_lead) {
@@ -26,15 +26,15 @@
                 echo "<li> people - " . $employee->first_name . ' ' . $employee->last_name . $team_lead;
                 if (!empty($relations[$name])) {
                     echo '<ul>';
-                    hasRelations($relations, $name, $groups);
-                    echo '</ul>';
-                    echo '</li>';
+                    hasRelations($relations, $name);
+                    echo '</ul></li>';
                 }
             }
+            $tmp_employee = $relations[$name];
             if(!empty($employee[0])){
                 foreach($employee as $empl) {
                     echo "<li> group - " . $empl->name;
-                    $name = $empl->name;
+                    $name_group = $empl->name;
 
                     foreach($empl->employees as $result) {
                         if ($result->team_lead) {
@@ -44,12 +44,12 @@
                         }
                         echo "<ul><li> people - " . $result->first_name . ' ' . $team_lead . "</li></ul>";
                     }
-//                    if (!empty($relations[$name])) {
-//                        echo '<ul>';
-//                        hasRelations($relations, $name, $groups);
-//                        echo '</ul>';
-//                        echo '</li>';
-//                    }
+                    if (!empty($tmp_employee[$name_group])) {
+                        echo '<ul>';
+                        dd($tmp_employee[$name_group]);
+                        hasRelations($tmp_employee[$name_group], $name);
+                        echo '</ul></li>';
+                    }
                 }
 
             }
@@ -60,7 +60,7 @@
         <div id="data">
             <ul>
                 @foreach($data as $item)
-                    @if($item->relation === null)
+                    @if($item->group->name === "" && $item->relation === null)
                         @if ($item->team_lead)
                         <?php $team_lead = '<span style="color:red;"> team lead </span>'; ?>
                         @else
@@ -72,7 +72,6 @@
                                 @if($relations[$item->first_name])
                                 {{ hasRelations($relations, $item->first_name, $groups) }}
                                 @endif
-
                         </ul>
                     </li>
                     @endif
