@@ -57,7 +57,7 @@
             </div>
         </div>
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <h2>add new Position</h2>
                     <form action="{!! route('position.store')!!}" method="post">
                         {{csrf_field()}}
@@ -66,7 +66,7 @@
                         <input type="submit" value="add">
                     </form>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <h2>add new Group</h2>
                     <form action="{!! route('group.store')!!}" method="post">
                         {{csrf_field()}}
@@ -80,6 +80,26 @@
                             @endforeach
                         </select><br>
                         <input type="submit" value="add">
+                    </form>
+                </div>
+                <div class="col-md-4">
+                    <h2>delete Employee</h2>
+                    <form action="{!! route('employee.destroy', 1) !!}" method="post">
+                        {{csrf_field()}}
+                        <label for="old">which removed the employee</label><br>
+                        <select name="old" id="old">
+                            @foreach($relations as $relation)
+                                <option name="{!! $relation->first_name . ' ' . $relation->last_name !!}">{!! $relation->first_name . ' ' . $relation->last_name !!} </option>
+                            @endforeach
+                        </select><br>
+                        <label for="new">responsible worker</label><br>
+                        <select name="new" id="new">
+                            @foreach($relations as $relation)
+                                <option name="{!! $relation->first_name . ' ' . $relation->last_name !!}">{!! $relation->first_name . ' ' . $relation->last_name !!} </option>
+                            @endforeach
+                        </select>
+                        <input type="hidden" name="_method" value="delete"> <br>
+                        <input type="submit" value="delete">
                     </form>
                 </div>
             </div>
