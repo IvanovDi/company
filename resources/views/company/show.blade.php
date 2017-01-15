@@ -11,12 +11,26 @@
     <title>Document</title>
 </head>
 <body>
+<?php 
+    function buildTree($id, $relations)
+    {
+        if(empty($relations[$id])) {
+            return;
+        }
+        foreach ($relations[$id]  as $item) {
+            echo '<li> '. $item['name'] . ' </li>';
+            echo "<ul><li>";
+                buildTree($item['id'], $relations);
+            echo "</li></ul>";
+        }
+        
+    }
+
+?>
     <div class="container">
         <div id="data">
-            <ul>
-                @foreach($relations as $item)
-                    <li>{!! $item->first_name!!}</li>
-                @endforeach
+            <ul>             
+                {{ buildTree(0, $relations)}}
             </ul>
         </div>
     </div>
@@ -27,6 +41,6 @@
             });
         });
     </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script> -->
 </body>
 </html>

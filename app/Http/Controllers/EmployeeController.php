@@ -65,7 +65,7 @@ class EmployeeController extends Controller
         $result['name'] = $item->first_name;
         $result['lastName'] = $item->last_name;
         $result['team_lead'] = $item->team_lead;
-        $result['relation_id'] = $item->relation;
+        $result['relation_id'] = $item->relation ?? 0;
         $result['group'] = $item->group->id;
 
         return $result;
@@ -106,9 +106,9 @@ class EmployeeController extends Controller
 
         $employees = Employee::with('relations', 'relationGroup')->get();
         foreach($employees as $employee) {
-            $tmp_arr[$employee->relation][] = $employee;
+            $tmp_arr[$employee->relation ?? 0][] = $this->getDataFromEmployee($employee);
         }
-
+        // dd($tmp_arr);
         return $tmp_arr;
     }
 
@@ -116,27 +116,9 @@ class EmployeeController extends Controller
 
     public function show($id)
     {
-        $this->arr_employee = $this->relation();
-        $relation = [];
-//        dd($id);
-        if(isset($this->arr_employee[$id])) {
-            foreach ($this->arr_employee[$id]  as $item) {
-                $relation [] = $item;
-            }
-            $this->show($item->id);
-            return view('company.show', [
-                'relations' => $relation,
-            ]);
-        }
-
-        return redirect('employee');
-
-////        $relation = $this->relation(Employee::with('relations', 'relationGroup')->get());
-//        $relation = $this->relation();
-//        $res = Employee::with('group', 'positions')->get();
-//        $groups = Group::with('employees')->get();
-//        dd($relation);
-
+        return view('company.show', [
+            'relations' => $this->relation()
+        ]);
     }
 
 //todo
