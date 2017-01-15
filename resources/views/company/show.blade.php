@@ -15,7 +15,7 @@
         <div id="data">
             <ul>
                 @foreach($relations as $item)
-                    <li>{!! $item!!}</li>
+                    <li>{!! $item->first_name!!}</li>
                 @endforeach
             </ul>
         </div>

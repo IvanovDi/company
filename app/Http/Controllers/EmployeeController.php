@@ -11,6 +11,9 @@ use phpDocumentor\Reflection\Types\Array_;
 class EmployeeController extends Controller
 {
 
+
+    protected $arr_employee = [];
+
     public function index()
     {
         $position = Position::all();
@@ -113,16 +116,27 @@ class EmployeeController extends Controller
 
     public function show($id)
     {
-//        $relation = $this->relation(Employee::with('relations', 'relationGroup')->get());
-        $relation = $this->relation();
-        $res = Employee::with('group', 'positions')->get();
-        $groups = Group::with('employees')->get();
-        
-        return view('company.show', [
-            'data' => $res,
-            'relations' => $relation,
-            'groups' => $groups
-        ]);
+        $this->arr_employee = $this->relation();
+        $relation = [];
+//        dd($id);
+        if(isset($this->arr_employee[$id])) {
+            foreach ($this->arr_employee[$id]  as $item) {
+                $relation [] = $item;
+            }
+            $this->show($item->id);
+            return view('company.show', [
+                'relations' => $relation,
+            ]);
+        }
+
+        return redirect('employee');
+
+////        $relation = $this->relation(Employee::with('relations', 'relationGroup')->get());
+//        $relation = $this->relation();
+//        $res = Employee::with('group', 'positions')->get();
+//        $groups = Group::with('employees')->get();
+//        dd($relation);
+
     }
 
 //todo

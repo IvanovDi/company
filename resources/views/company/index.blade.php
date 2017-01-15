@@ -48,7 +48,7 @@
             </div>
             <div class="col-md-6 border">
                 <h2>show Employee</h2>
-                <form action="{!! route('employee.show', 1) !!}" method="get">
+                <form action="{!! route('employee.show', 2) !!}" method="get">
                     <input type="submit" name="send" value="show">
                 </form>
                 <h2>show Group</h2>
