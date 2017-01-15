@@ -3,18 +3,24 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 use Position;
 
 
 class Employee extends Model
 {
+
+    use SoftDeletes;
+
     protected $fillable = [
         'first_name',
         'last_name',
         'group_id',
         'position_id',
         'relation',
-        'team_lead'
+        'team_lead',
+        'deleted_at'
     ];
 
     public function positions()

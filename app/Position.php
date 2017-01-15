@@ -3,12 +3,16 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Employee;
 
 class Position extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
-        'name'
+        'name',
+        'deleted_at'
     ];
 
     public function employees()

@@ -6,12 +6,13 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="/css/app.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
     <title>Document</title>
 </head>
 <body>
     <div class="container">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-6 border">
                 <h1>add new Employee</h1>
                 <form action="{!! route('employee.store') !!}" method="post">
                     {{csrf_field()}}
@@ -45,7 +46,7 @@
                     <input type="submit" name="submit" value="add new">
                 </form>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6 border">
                 <h2>show Employee</h2>
                 <form action="{!! route('employee.show', 1) !!}" method="get">
                     <input type="submit" name="send" value="show">
@@ -57,7 +58,7 @@
             </div>
         </div>
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-4 border">
                     <h2>add new Position</h2>
                     <form action="{!! route('position.store')!!}" method="post">
                         {{csrf_field()}}
@@ -66,7 +67,7 @@
                         <input type="submit" value="add">
                     </form>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-4 border">
                     <h2>add new Group</h2>
                     <form action="{!! route('group.store')!!}" method="post">
                         {{csrf_field()}}
@@ -82,7 +83,7 @@
                         <input type="submit" value="add">
                     </form>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-4 border">
                     <h2>delete Employee</h2>
                     <form action="{!! route('employee.destroy', 1) !!}" method="post">
                         {{csrf_field()}}

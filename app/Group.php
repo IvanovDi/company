@@ -3,13 +3,16 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Group extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
         'name',
-        'relation'
+        'relation',
+        'deleted_at'
     ];
 
     public function employees()

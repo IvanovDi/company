@@ -22,6 +22,7 @@ class CreateEmployeesTable extends Migration
             $table->integer('relation')->nullable();
             $table->integer('group_id')->unsigned()->nullable();
             $table->foreign('group_id')->references('id')->on('groups');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -96,54 +96,28 @@ class EmployeeController extends Controller
         return false;
     }
 
-    protected function relation($employee)
+
+    protected function relation()
     {
-        $arr_relations = [];
-        $res =  $employee;
-        foreach($res  as $item) {
-            $tmp_group_arr = [];
-            $tmp_arr = [];
-            $name = '';
-            if($item instanceof Employee) {
-                $name = $item->first_name;
-                if($item->relationGroup) {
-                    $group = $item->relationGroup;
-                    foreach($group as $items) {
-                        $current = $items->with('employees')->where('name', $items->name)->get();
-                        $tmp_group_arr[$items->name] = $this->getDataFromGroup($current);
-                        // if($this->hasRelationGroup($tmp_group_arr[$items->name])) {
-                        //     $tmp_group_arr[$items->name]['relations'] = $this->relation($items);
-                        //     dd($tmp_group_arr[$items->name]);
-                        // }
-                    }
-                }
-            }
-            if($item instanceof Group) {
-                $name = $item->name;
-            }
-            if($item instanceof Employee) {
-                foreach($item->relations as $result) {
-                    $tmp_arr[$result->first_name] = $this->getDataFromEmployee($result);
-                    // if($this->hasRelationEmployee($tmp_arr[$result->first_name])) {
-                    //     $tmp_arr[$result->first_name]['relations'] = $this->relations($result);
-                    //     dd($tmp_arr[$result->first_name]);
-                    // }
-                }
-            }
-            
-            $arr_relations[$name] = array_merge($tmp_arr, $tmp_group_arr);
+        $tmp_arr = [];
+
+        $employees = Employee::with('relations', 'relationGroup')->get();
+        foreach($employees as $employee) {
+            $tmp_arr[$employee->relation][] = $employee;
         }
-        // dd($arr_relations);
-        return $arr_relations;
+
+        return $tmp_arr;
     }
 
 
 
     public function show($id)
     {
-        $relation = $this->relation(Employee::with('relations', 'relationGroup')->get());
+//        $relation = $this->relation(Employee::with('relations', 'relationGroup')->get());
+        $relation = $this->relation();
         $res = Employee::with('group', 'positions')->get();
         $groups = Group::with('employees')->get();
+        
         return view('company.show', [
             'data' => $res,
             'relations' => $relation,
@@ -180,8 +154,10 @@ class EmployeeController extends Controller
             $new= null;
         }
 
+
+        Employee::destroy();
         Employee::where('relation', $old)->update(['relation' => $new]);
-        Group::where('relation', $old)->update(['relation' => $new]);//todo и удалить самго работника
+        Group::where('relation', $old)->update(['relation' => $new]);
         return redirect('employee');  
    }
 }

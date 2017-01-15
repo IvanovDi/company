@@ -17,6 +17,7 @@ class CreateGroupsTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->integer('relation')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
