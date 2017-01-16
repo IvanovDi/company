@@ -12,16 +12,34 @@
 </head>
 <body>
 <?php 
-    function buildTree($id, $relations)
+    function buildTree($id, $relations, $groupsContent)
     {
         if(empty($relations[$id])) {
             return;
         }
         foreach ($relations[$id]  as $item) {
-            echo '<li> '. $item['name'] . ' </li>';
-            echo "<ul><li>";
-                buildTree($item['id'], $relations);
-            echo "</li></ul>";
+
+            if(isset($item['isgroup'])) {
+                if($item['id'] !== 1) {
+                    echo '<li> this is gouprs -  ' . $item['name']. '</li>';
+                    if(!empty($groupsContent[$item['id']])) {
+                        foreach($groupsContent[$item['id']] as $employee) {
+                            if(!empty($employee)) {
+                                echo '<ul><li>' .$employee['name']. '</ul></li>';
+                            }
+                        }
+                    }
+                return;
+                }
+            } else {
+                if($item['group'] === 1 && $item['relation_id'] === 0)
+                    echo '<li> '.  $item['name'] ;
+
+                echo "<ul>";
+                    buildTree($item['id'], $relations, $groupsContent);
+                echo "</ul>";
+            }
+            echo ' </li>';
         }
         
     }
@@ -29,8 +47,8 @@
 ?>
     <div class="container">
         <div id="data">
-            <ul>             
-                {{ buildTree(0, $relations)}}
+            <ul>
+                {{ buildTree(0, $relations, $groupsContent) }}
             </ul>
         </div>
     </div>
@@ -41,6 +59,6 @@
             });
         });
     </script>
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script> -->
+    {{--<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>--}}
 </body>
 </html>

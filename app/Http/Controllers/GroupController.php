@@ -52,6 +52,11 @@ class GroupController extends Controller
         return redirect('employee');
     }
 
+    protected function getArrayGroup($group)
+    {
+
+    }
+
     /**
      * Display the specified resource.
      *

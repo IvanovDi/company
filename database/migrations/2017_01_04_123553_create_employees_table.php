@@ -18,7 +18,7 @@ class CreateEmployeesTable extends Migration
             $table->increments('id');
             $table->string('first_name');
             $table->string('last_name');
-            $table->boolean('team_lead');
+            $table->boolean('team_lead')->nullable();
             $table->integer('relation')->nullable();
             $table->integer('group_id')->unsigned()->nullable();
             $table->foreign('group_id')->references('id')->on('groups');

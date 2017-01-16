@@ -63,10 +63,10 @@ class EmployeeController extends Controller
         $result = [];
         $result['id'] = $item->id;
         $result['name'] = $item->first_name;
-        $result['lastName'] = $item->last_name;
+        $result['last_name'] = $item->last_name;
         $result['team_lead'] = $item->team_lead;
         $result['relation_id'] = $item->relation ?? 0;
-        $result['group'] = $item->group->id;
+        $result['group'] = $item->group->id ?? 0;
 
         return $result;
     }
@@ -74,29 +74,26 @@ class EmployeeController extends Controller
     protected function getDataFromGroup($item)
     {
         $result = [];
-        $result['id'] = $item[0]->id;
-        $result['name'] = $item[0]->name;
-        $result['relation_id'] = $item[0]->relation;
+        $result['id'] = $item->id;
+        $result['name'] = $item->name;
+        $result['relation_id'] = $item->relation ?? 0;
+        $result['isgroup'] = 'group';
 
         return $result;
     }
 
-    protected function hasRelationEmployee($item)
+    protected function getArrayGroup()
     {
-        if(isset($item['relation'])) {
-            return $this->relation(Employee::where('id', $item['id'])->with('relations', 'relationGroup')->get());
+        $groups = Group::with('employees')->get();
+        $result = [];
+        foreach($groups as $group) {
+            $tmp_arr = [];
+            foreach($group->employees as $employee) {
+                $tmp_arr = $this->getDataFromEmployee($employee);
+                $result[$group->id][] = $tmp_arr;
+            }
         }
-
-        return false;
-    }
-
-    protected function hasRelationGroup($item)
-    {
-        if(isset($item['relation'])) {
-            return $this->relation(Group::where('id', $item['id'])->with('relations')->get());
-        }
-
-        return false;
+        return $result;
     }
 
 
@@ -105,8 +102,12 @@ class EmployeeController extends Controller
         $tmp_arr = [];
 
         $employees = Employee::with('relations', 'relationGroup')->get();
+        $groups = Group::with('relations')->get();
         foreach($employees as $employee) {
             $tmp_arr[$employee->relation ?? 0][] = $this->getDataFromEmployee($employee);
+        }
+        foreach($groups as $group) {
+            $tmp_arr[$group->relation ?? 0][] = $this->getDataFromGroup($group);
         }
         // dd($tmp_arr);
         return $tmp_arr;
@@ -117,7 +118,8 @@ class EmployeeController extends Controller
     public function show($id)
     {
         return view('company.show', [
-            'relations' => $this->relation()
+            'relations' => $this->relation(),
+            'groupsContent' => $this->getArrayGroup()
         ]);
     }
 
