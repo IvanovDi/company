@@ -39,15 +39,16 @@ class GroupController extends Controller
      */
     public function store(Request $request)
     {
-        $arr_name  = explode(' ', $request['relation']);
-        if($arr_name[0]) {
+        $arr_name = explode(' ', $request['relation']);
+        if ($arr_name[0] && $arr_name[0] !== 'null') {
             $relation = Employee::where('first_name', $arr_name[0])->where('last_name', $arr_name[1])->get()[0]->id;
         } else {
             $relation = null;
         }
+
         Group::create([
             'name' => $request['group_name'],
-            'relation' => $relation
+            'main_employee_id' => $relation
         ]);
         return redirect('employee');
     }

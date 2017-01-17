@@ -36,23 +36,26 @@ class EmployeeController extends Controller
     public function store(Request $request)
     {
         $team_lead = $request->input('team_lead') ? true : false;
-        $group_id = Group::where('name', $request['group'])->get();
-        $group_id = $group_id[0]->id;
-        $arr_name  = explode(' ', $request['relation']);
+        $arr_name  = explode(' ', $request['main_employee_id']);
         if($arr_name[0]) {
-            $relation = Employee::where('first_name', $arr_name[0])->where('last_name', $arr_name[1])->get()[0]->id;
+            $mainEmployeeId = Employee::where('first_name', $arr_name[0])->where('last_name', $arr_name[1])->get()[0]->id;
         } else {
-            $relation = null;
+            $mainEmployeeId = null;
         }
         $employee =  Employee::create([
             'first_name' => $request->input('first_name'),
             'last_name' => $request->input('last_name'),
-            'group_id' => $group_id,
-            'relation' => $relation,
+            'main_employee_id' => $mainEmployeeId,
             'team_lead' => $team_lead
          ]);
-        $position = Position::where('name', $request['position'])->get();
-        $employee->positions()->attach($position[0]->id);
+        if($request['position']) {
+            $position = Position::where('name', $request['position'])->get();
+            $employee->positions()->attach($position[0]->id);
+        }
+        if($request['group']) {
+            $group_id = Group::where('name', $request['group'])->get();
+            $employee->groups()->attach($group_id[0]->id);
+        }
 
 
         return redirect('employee');
@@ -65,7 +68,7 @@ class EmployeeController extends Controller
         $result['name'] = $item->first_name;
         $result['last_name'] = $item->last_name;
         $result['team_lead'] = $item->team_lead;
-        $result['relation_id'] = $item->relation ?? 0;
+        $result['relation_id'] = $item->main_employee_id ?? 0;
         $result['group'] = $item->group->id ?? 0;
 
         return $result;
@@ -76,7 +79,7 @@ class EmployeeController extends Controller
         $result = [];
         $result['id'] = $item->id;
         $result['name'] = $item->name;
-        $result['relation_id'] = $item->relation ?? 0;
+        $result['relation_id'] = $item->main_employee_id ?? 0;
         $result['isgroup'] = 'group';
 
         return $result;
@@ -104,12 +107,12 @@ class EmployeeController extends Controller
         $employees = Employee::with('relations', 'relationGroup')->get();
         $groups = Group::with('relations')->get();
         foreach($employees as $employee) {
-            $tmp_arr[$employee->relation ?? 0][] = $this->getDataFromEmployee($employee);
+            $tmp_arr[$employee->main_employee_id ?? 0][] = $this->getDataFromEmployee($employee);
         }
         foreach($groups as $group) {
-            $tmp_arr[$group->relation ?? 0][] = $this->getDataFromGroup($group);
+            $tmp_arr[$group->main_employee_id ?? 0][] = $this->getDataFromGroup($group);
         }
-        // dd($tmp_arr);
+//         dd($tmp_arr);
         return $tmp_arr;
     }
 
@@ -152,10 +155,9 @@ class EmployeeController extends Controller
             $new= null;
         }
 
-
-        Employee::destroy();
-        Employee::where('relation', $old)->update(['relation' => $new]);
-        Group::where('relation', $old)->update(['relation' => $new]);
+        Employee::destroy($old);
+        Employee::where('main_employee_id', $old)->update(['main_employee_id' => $new]);
+        Group::where('main_employee_id', $old)->update(['main_employee_id' => $new]);
         return redirect('employee');  
    }
 }

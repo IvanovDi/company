@@ -11,17 +11,17 @@ class Group extends Model
 
     protected $fillable = [
         'name',
-        'relation',
+        'main_employee_id',
         'deleted_at'
     ];
 
     public function employees()
     {
-        return $this->hasMany(Employee::class);
+        return $this->belongsToMany('App\Employee', 'employee_group')->withTimestamps();
     }
 
     public function relations()
     {
-        return $this->belongsTo(Employee::class, 'relation');
+        return $this->belongsTo(Employee::class, 'main_employee_id');
     }
 }

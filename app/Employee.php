@@ -18,7 +18,7 @@ class Employee extends Model
         'last_name',
         'group_id',
         'position_id',
-        'relation',
+        'main_employee_id',
         'team_lead',
         'deleted_at'
     ];
@@ -28,18 +28,18 @@ class Employee extends Model
         return $this->belongsToMany('App\Position', 'employee_position')->withTimestamps();
     }
 
-    public function group()
+    public function groups()
     {
-        return $this->belongsTo(Group::class);
+        return $this->belongsToMany('App\Group', 'employee_group')->withTimestamps();
     }
 
     public function relations()
     {
-        return $this->hasMany(Employee::class, 'relation');
+        return $this->hasMany(Employee::class, 'main_employee_id');
     }
 
     public function relationGroup()
     {
-        return $this->hasMany(Group::class, 'relation');
+        return $this->hasMany(Group::class, 'main_employee_id');
     }
 }

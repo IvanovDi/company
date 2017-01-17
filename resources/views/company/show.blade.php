@@ -20,25 +20,44 @@
         foreach ($relations[$id]  as $item) {
 
             if(isset($item['isgroup'])) {
-                if($item['id'] !== 1) {
-                    echo '<li> this is gouprs -  ' . $item['name']. '</li>';
-                    if(!empty($groupsContent[$item['id']])) {
-                        foreach($groupsContent[$item['id']] as $employee) {
-                            if(!empty($employee)) {
-                                echo '<ul><li>' .$employee['name']. '</ul></li>';
-                            }
+                if(!empty($groupsContent[$item['id']])) {
+                    foreach($groupsContent[$item['id']] as $employee) {
+                        if(!empty($employee)) {
+                            echo '<ul><li>' .$employee['name']. '</li></ul>';
                         }
                     }
-                return;
                 }
-            } else {
-                if($item['group'] === 1 && $item['relation_id'] === 0)
-                    echo '<li> '.  $item['name'] ;
-
-                echo "<ul>";
-                    buildTree($item['id'], $relations, $groupsContent);
-                echo "</ul>";
             }
+            echo '<li> '.  $item['name'] ;
+
+            echo "<ul>";
+                buildTree($item['id'], $relations, $groupsContent);
+            echo "</ul>";
+
+
+
+
+
+//            if(isset($item['isgroup'])) {
+//                if($item['id'] !== 1) {
+//                    echo '<li> this is gouprs -  ' . $item['name'];
+//                    if(!empty($groupsContent[$item['id']])) {
+//                        foreach($groupsContent[$item['id']] as $employee) {
+//                            if(!empty($employee)) {
+//                                echo '<ul><li>' .$employee['name']. '</li></ul>';
+//                            }
+//                        }
+//                    }
+//                    echo '</li>';
+//                }
+//            } else {
+//                if($item['group'] === 1 && $item['relation_id'] === 0)
+//                    echo '<li> '.  $item['name'] ;
+//
+//                echo "<ul>";
+//                    buildTree($item['id'], $relations, $groupsContent);
+//                echo "</ul>";
+//            }
             echo ' </li>';
         }
         
@@ -59,6 +78,6 @@
             });
         });
     </script>
-    {{--<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>--}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
 </body>
 </html>

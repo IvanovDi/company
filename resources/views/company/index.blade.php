@@ -20,8 +20,8 @@
                     <input type="text" id="first_name" name="first_name"><br>
                     <label for="last_name">Last Name</label><br>
                     <input type="text" id="last_name" name="last_name"><br>
-                    <label for="relation">Relation</label><br>
-                    <select name="relation"  id="relation">
+                    <label for="main_employee_id">Relation</label><br>
+                    <select name="main_employee_id"  id="main_employee_id">
                         <option selected value=""></option>
                         @foreach($relations as $relation)
                             <option name="{!! $relation->first_name . ' ' . $relation->last_name !!}">{!! $relation->first_name . ' ' . $relation->last_name !!} </option>
@@ -75,7 +75,7 @@
                         <br><input type="text" id="group" name="group_name"><br>
                         <label for="relation">Relation</label><br>
                         <select name="relation"  id="relation">
-                            <option selected value=""></option>
+                            <option selected value="null"></option>
                             @foreach($relations as $relation)
                                 <option name="{!! $relation->first_name . ' ' . $relation->last_name !!}">{!! $relation->first_name . ' ' . $relation->last_name !!} </option>
                             @endforeach
