@@ -38,12 +38,12 @@ class EmployeeController extends Controller
         $team_lead = $request->input('team_lead') ? true : false;
         $arr_name  = explode(' ', $request['main_employee_id']);
         if($arr_name[0]) {
-            $mainEmployeeId = Employee::where('first_name', $arr_name[0])->where('last_name', $arr_name[1])->get()[0]->id;
+            $mainEmployeeId = Employee::where('name', $arr_name[0])->where('last_name', $arr_name[1])->get()[0]->id;
         } else {
             $mainEmployeeId = null;
         }
         $employee =  Employee::create([
-            'first_name' => $request->input('first_name'),
+            'name' => $request->input('first_name'),
             'last_name' => $request->input('last_name'),
             'main_employee_id' => $mainEmployeeId,
             'team_lead' => $team_lead
@@ -65,11 +65,11 @@ class EmployeeController extends Controller
     {
         $result = [];
         $result['id'] = $item->id;
-        $result['name'] = $item->first_name;
+        $result['name'] = $item->name;
         $result['last_name'] = $item->last_name;
         $result['team_lead'] = $item->team_lead;
         $result['relation_id'] = $item->main_employee_id ?? 0;
-        $result['group'] = $item->group->id ?? 0;
+        $result['group'] = $item->groups[0]->id ?? 0;
 
         return $result;
     }
@@ -104,7 +104,7 @@ class EmployeeController extends Controller
     {
         $tmp_arr = [];
 
-        $employees = Employee::with('relations', 'relationGroup')->get();
+        $employees = Employee::with('relations', 'relationGroup', 'groups')->get();
         $groups = Group::with('relations')->get();
         foreach($employees as $employee) {
             $tmp_arr[$employee->main_employee_id ?? 0][] = $this->getDataFromEmployee($employee);
@@ -118,10 +118,42 @@ class EmployeeController extends Controller
 
 
 
+    protected function getFullArray($employees)
+    {
+        $tmp_arr = [];
+        $i = 0;
+        foreach($employees as $employee) {
+            if($employee instanceof Employee) {
+                $tmp_arr[$i] = $this->getDataFromEmployee($employee);
+            }
+            if($employee instanceof Group) {
+                $tmp_arr[$i] = $this->getDataFromGroup($employee);// todo проверить на работоспособность
+            }
+            if(!empty($employee->relations[0])) {
+                $tmp_arr[$i]['relations'] = $this->getFullArray($employee->relations);
+            }
+             if(!empty($employee->relationGroup[0])) {
+                $tmp_result = Group::where('id', $employee->id)->with('employees')->get();
+                dd($tmp_result[0]);
+                $tmp_arr[$i]['relationGroup'] = $this->getFullArray($employee->relationGroup);
+                $tmp_arr[$i]['relationGroup']['groupsContent'] = $this->getFullArray($tmp_result[0]->relations);
+             }
+            $i++;
+        }
+
+          // dd($tmp_arr);
+        return $tmp_arr;
+    }
+
+
+
     public function show($id)
     {
+        dd($this->getFullArray(Employee::with('relations', 'relationGroup', 'groups')->get()));
         return view('company.show', [
-            'relations' => $this->relation(),
+            //'relations' => $this->relation(),
+            'relations' => $this->getFullArray(Employee::with('relations', 'relationGroup', 'groups')->get()
+),
             'groupsContent' => $this->getArrayGroup()
         ]);
     }
@@ -143,14 +175,14 @@ class EmployeeController extends Controller
    {
         $arr_name  = explode(' ', $request['old']);
         if($arr_name[0]) {
-            $old = Employee::where('first_name', $arr_name[0])->where('last_name', $arr_name[1])->get()[0]->id;
+            $old = Employee::where('name', $arr_name[0])->where('last_name', $arr_name[1])->get()[0]->id;
         } else {
             $old = null;
         }
 
         $arr_name  = explode(' ', $request['new']);
         if($arr_name[0]) {
-            $new = Employee::where('first_name', $arr_name[0])->where('last_name', $arr_name[1])->get()[0]->id;
+            $new = Employee::where('name', $arr_name[0])->where('last_name', $arr_name[1])->get()[0]->id;
         } else {
             $new= null;
         }

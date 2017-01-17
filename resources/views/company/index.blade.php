@@ -24,7 +24,7 @@
                     <select name="main_employee_id"  id="main_employee_id">
                         <option selected value=""></option>
                         @foreach($relations as $relation)
-                            <option name="{!! $relation->first_name . ' ' . $relation->last_name !!}">{!! $relation->first_name . ' ' . $relation->last_name !!} </option>
+                            <option name="{!! $relation->name . ' ' . $relation->last_name !!}">{!! $relation->name . ' ' . $relation->last_name !!} </option>
                         @endforeach
                     </select><br>
 
@@ -77,7 +77,7 @@
                         <select name="relation"  id="relation">
                             <option selected value="null"></option>
                             @foreach($relations as $relation)
-                                <option name="{!! $relation->first_name . ' ' . $relation->last_name !!}">{!! $relation->first_name . ' ' . $relation->last_name !!} </option>
+                                <option name="{!! $relation->name . ' ' . $relation->last_name !!}">{!! $relation->name . ' ' . $relation->last_name !!} </option>
                             @endforeach
                         </select><br>
                         <input type="submit" value="add">

@@ -41,7 +41,7 @@ class GroupController extends Controller
     {
         $arr_name = explode(' ', $request['relation']);
         if ($arr_name[0] && $arr_name[0] !== 'null') {
-            $relation = Employee::where('first_name', $arr_name[0])->where('last_name', $arr_name[1])->get()[0]->id;
+            $relation = Employee::where('name', $arr_name[0])->where('last_name', $arr_name[1])->get()[0]->id;
         } else {
             $relation = null;
         }
