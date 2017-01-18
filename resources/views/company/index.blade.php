@@ -23,21 +23,21 @@
                     <label for="main_employee_id">Relation</label><br>
                     <select name="main_employee_id"  id="main_employee_id">
                         <option selected value=""></option>
-                        @foreach($relations as $relation)
-                            <option name="{!! $relation->name . ' ' . $relation->last_name !!}">{!! $relation->name . ' ' . $relation->last_name !!} </option>
+                        @foreach($employees as $employee)
+                            <option value="{!! $employee->id !!}">{!! $employee->name . ' ' . $employee->last_name !!} </option>
                         @endforeach
                     </select><br>
 
                     <label for="position">Position</label><br>
-                     <select name="position"  id="position">
-                        @foreach($positions as $position)
-                             <option name="{!! $position->name !!}">{!! $position->name !!} </option>
+                     <select name="position_id"  id="position">
+                        @foreach($positions as $positionId => $positionName)
+                             <option value="{!! $positionId !!}">{!! $positionName !!} </option>
                         @endforeach
                     </select><br>
                     <label for="group">Select Group</label><br>
-                    <select name="group"  id="group">
-                        @foreach($groups as $group)
-                            <option name="{!! $group->name !!}">{!! $group->name !!}</option>
+                    <select name="group_id"  id="group">
+                        @foreach($groups as $groupId => $groupName)
+                            <option value="{!! $groupId !!}">{!! $groupName !!}</option>
                         @endforeach
                     </select><br>
                     <label for="team_lead">Team Lead</label><br>
@@ -48,7 +48,7 @@
             </div>
             <div class="col-md-6 border">
                 <h2>show Employee</h2>
-                <form action="{!! route('employee.show', 0) !!}" method="get">
+                <form action="{!! route('employee.show') !!}" method="get">
                     <input type="submit" name="send" value="show">
                 </form>
                 <h2>show Group</h2>
@@ -74,10 +74,10 @@
                         <label for="group">title group</label>
                         <br><input type="text" id="group" name="group_name"><br>
                         <label for="relation">Relation</label><br>
-                        <select name="relation"  id="relation">
+                        <select name="main_employee_id"  id="main_employee_id">
                             <option selected value="null"></option>
-                            @foreach($relations as $relation)
-                                <option name="{!! $relation->name . ' ' . $relation->last_name !!}">{!! $relation->name . ' ' . $relation->last_name !!} </option>
+                            @foreach($employees as $employee)
+                                <option value="{!! $employee->id !!}">{!! $employee->name . ' ' . $employee->last_name !!} </option>
                             @endforeach
                         </select><br>
                         <input type="submit" value="add">
@@ -85,18 +85,18 @@
                 </div>
                 <div class="col-md-4 border">
                     <h2>delete Employee</h2>
-                    <form action="{!! route('employee.destroy', 1) !!}" method="post">
+                    <form action="{!! route('employee.destroy') !!}" method="post">
                         {{csrf_field()}}
                         <label for="old">which removed the employee</label><br>
                         <select name="old" id="old">
-                            @foreach($relations as $relation)
-                                <option name="{!! $relation->first_name . ' ' . $relation->last_name !!}">{!! $relation->first_name . ' ' . $relation->last_name !!} </option>
+                            @foreach($employees as $employee)
+                                <option value="{!! $employee->id !!}">{!! $employee->first_name . ' ' . $employee->last_name !!}</option>
                             @endforeach
                         </select><br>
                         <label for="new">responsible worker</label><br>
                         <select name="new" id="new">
-                            @foreach($relations as $relation)
-                                <option name="{!! $relation->first_name . ' ' . $relation->last_name !!}">{!! $relation->first_name . ' ' . $relation->last_name !!} </option>
+                            @foreach($employees as $employee)
+                                <option value="{!! $employee->id !!}">{!! $employee->first_name . ' ' . $employee->last_name !!} </option>
                             @endforeach
                         </select>
                         <input type="hidden" name="_method" value="delete"> <br>

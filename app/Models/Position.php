@@ -1,10 +1,10 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Employee;
+use App\Models\Employee;
 
 class Position extends Model
 {
@@ -17,6 +17,6 @@ class Position extends Model
 
     public function employees()
     {
-        return $this->belongsToMany('App\Employee', 'employee_position')->withTimestamps();
+        return $this->belongsToMany(Employee::class, 'employee_position')->withTimestamps();
     }
 }

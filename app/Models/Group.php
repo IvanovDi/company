@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -12,15 +12,14 @@ class Group extends Model
     protected $fillable = [
         'name',
         'main_employee_id',
-        'deleted_at'
     ];
 
     public function employees()
     {
-        return $this->belongsToMany('App\Employee', 'employee_group')->withTimestamps();
+        return $this->belongsToMany(Employee::class, 'employee_group')->withTimestamps();
     }
 
-    public function relations()
+    public function mainGroupEmployee()
     {
         return $this->belongsTo(Employee::class, 'main_employee_id');
     }

@@ -11,8 +11,42 @@
 |
 */
 
-Route::resource('employee', 'EmployeeController');
+Route::resource('employee', 'CompanyController', [
+    'except' => [
+        'destroy', 'edit', 'update', 'create', 'show'
+    ],
+    'names' => [
+        'index' => 'employee.index',
+        'show' => 'employee.show',
+        'store' => 'employee.store'
+    ]
+]);
 
-Route::resource('position', 'PositionController');
+Route::delete('destroy', [
+    'as' => 'employee.destroy',
+    'uses' => 'CompanyController@destroy'
+]);
 
-Route::resource('group', 'GroupController');
+Route::get('show', [
+    'as' => 'employee.show',
+    'uses' => 'CompanyController@show'
+]);
+
+Route::resource('position', 'PositionController', [
+    'only' => [
+        'store',
+    ],
+    'names' => [
+        'store' => 'position.store'
+    ]
+]);
+
+Route::resource('group', 'GroupController', [
+    'only' => [
+        'store', 'show'
+    ],
+    'names' => [
+        'show' => 'group.show',
+        'store' => 'group.store'
+    ]
+]);
