@@ -7,7 +7,6 @@ use App\Models\{
     Group,
     Position
 };
-use App\User;
 use Illuminate\Http\Request;
 
 class CompanyController extends Controller
@@ -54,7 +53,9 @@ class CompanyController extends Controller
 
     public function show()
     {
+        \DB::enableQueryLog();
         $array = $this->getTreeUsers();
+//        dd(\DB::getQueryLog());
         return view('company.show', [
             'data' => $array,
         ]);
@@ -62,12 +63,14 @@ class CompanyController extends Controller
 
     protected function getTreeUsers($id = null)
     {
+
+        //переписать все на массивы и удуалить fullname из модели после выполнения функции очистить статическую переменную
         $response = [];
-        $users = Employee::where('main_employee_id', $id)->get();
+        dd($this->getEmployee($id));
+        $users = $this->getEmployee($id);
         foreach ($users as $user) {
             $response[$user->id]['name'] = $user->getFullName();
-            $groups = $user->subordinatesGroups()->with('employees')->get();
-            foreach ($groups as $group) {
+            foreach ($user->subordinatesGroups as $group) {
                 $employeeGroupArray = [];
                 foreach ($group->employees as $employeeGroup) {
                     $employeeGroupArray[$employeeGroup->id]['name'] = $employeeGroup->getFullName();
@@ -84,6 +87,17 @@ class CompanyController extends Controller
             $response[$user->id]['child'] = $this->getTreeUsers($user->id);
         }
         return $response;
+    }
+
+    protected function getEmployee($id)
+    {
+        static $employeeUsed;
+        if (!isset($employeeUsed[$id])) {
+            $users = Employee::where('main_employee_id', $id)->with('subordinatesGroups.employees')->get();
+            //todo хранить только нужные данные
+            $employeeUsed[$id] = $users;
+        }
+        return $employeeUsed[$id];
     }
 
     public function destroy(Request $request) //todo

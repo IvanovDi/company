@@ -2,16 +2,29 @@
     <ul>
         <li>
             {!! $employeeData['name'] !!}
+            @if (isset($employeeData['groups']) && $employeeData['groups'])
+                <ul>
+                    <li>
+                        Groups
+                        <ul>
+                            @foreach($employeeData['groups'] as $groupId => $groupData)
+                                <li>{!! $groupData['name'] !!}
+                                @if (isset($groupData['employees']) && $groupData['employees'])
+                                    @include('company.displayList', [
+                                       'data' => $employeeData['child'],
+                                    ])
+                                @endif
+                                </li>
+                            @endforeach
+                        </ul>
+                    </li>
+                </ul>
+            @endif
             @if ($employeeData['child'])
                 @include('company.displayList', [
                     'data' => $employeeData['child'],
                 ])
             @endif
-            {{--@if($employeeData['groups'])--}}
-                {{--@include('company.displayList', [--}}
-                    {{--'data' => $employeeData['groups']--}}
-                {{--])--}}
-            {{--@endif--}}
         </li>
     </ul>
 @endforeach
