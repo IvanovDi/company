@@ -55,6 +55,7 @@ class CompanyController extends Controller
     {
         \DB::enableQueryLog();
         $array = $this->getTreeUsers();
+//        dd($array);
 //        dd(\DB::getQueryLog());
         return view('company.show', [
             'data' => $array,
@@ -63,17 +64,15 @@ class CompanyController extends Controller
 
     protected function getTreeUsers($id = null)
     {
-
-        //переписать все на массивы и удуалить fullname из модели после выполнения функции очистить статическую переменную
         $response = [];
         $users = $this->getEmployee($id);
         foreach ($users as $user) {
             $response[$user['id']]['name'] = $user['name'] . ' ' . $user['last_name'];
+            $response[$user['id']]['team_lead'] = $user['team_lead'];
             foreach ($user['subordinates_groups'] as $group) {
                 $employeeGroupArray = [];
                 foreach ($group['employees'] as $employeeGroup) {
                     $employeeGroupArray[$employeeGroup['id']]['name'] = $employeeGroup['name'] . ' ' . $employeeGroup['last_name'];
-                    dd($employeeGroup);
                     foreach ($employeeGroup['subordinates'] as $subordinate) {
                         $employeeGroupArray[$employeeGroup['id']]['child'] = $this->getTreeUsers($subordinate['id']);
                     }
@@ -84,16 +83,17 @@ class CompanyController extends Controller
                     'employees' => $employeeGroupArray,
                 ];
             }
-            $response[$user['id']['child'] = $this->getTreeUsers($user['id'])];
+            $response[$user['id']]['child'] = $this->getTreeUsers($user['id']);
         }
         return $response;
     }
+
 
     protected function getEmployee($id)
     {
         static $employeeUsed;
         if (!isset($employeeUsed[$id])) {
-            $users = Employee::where('main_employee_id', $id)->with('subordinatesGroups.employees')->get()->toArray();
+            $users = Employee::where('main_employee_id', $id)->with('subordinatesGroups.employees.subordinates')->get()->toArray();
             //todo хранить только нужные данные
             $employeeUsed[$id] = $users;
         }

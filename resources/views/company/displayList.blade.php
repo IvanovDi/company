@@ -2,6 +2,9 @@
     <ul>
         <li>
             {!! $employeeData['name'] !!}
+            @if($employeeData['team_lead'] === 1)
+                <span style="color: red;">Team Lead</span>
+            @endif
             @if (isset($employeeData['groups']) && $employeeData['groups'])
                 <ul>
                     <li>
