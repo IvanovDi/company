@@ -45,8 +45,8 @@ class Employee extends Model
         return $this->hasMany(Employee::class, 'main_employee_id');
     }
 
-    public function getFullName()
-    {
-        return $this->first_name . ' ' . $this->last_name;
-    }
+//    public function getFullName()
+//    {
+//        return $this->first_name . ' ' . $this->last_name;
+//    }
 }

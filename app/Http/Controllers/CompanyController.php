@@ -66,25 +66,25 @@ class CompanyController extends Controller
 
         //переписать все на массивы и удуалить fullname из модели после выполнения функции очистить статическую переменную
         $response = [];
-        dd($this->getEmployee($id));
         $users = $this->getEmployee($id);
         foreach ($users as $user) {
-            $response[$user->id]['name'] = $user->getFullName();
-            foreach ($user->subordinatesGroups as $group) {
+            $response[$user['id']]['name'] = $user['name'] . ' ' . $user['last_name'];
+            foreach ($user['subordinates_groups'] as $group) {
                 $employeeGroupArray = [];
-                foreach ($group->employees as $employeeGroup) {
-                    $employeeGroupArray[$employeeGroup->id]['name'] = $employeeGroup->getFullName();
-                    foreach ($employeeGroup->subordinates as $subordinate) {
-                        $employeeGroupArray[$employeeGroup->id]['child'] = $this->getTreeUsers($subordinate->id);
+                foreach ($group['employees'] as $employeeGroup) {
+                    $employeeGroupArray[$employeeGroup['id']]['name'] = $employeeGroup['name'] . ' ' . $employeeGroup['last_name'];
+                    dd($employeeGroup);
+                    foreach ($employeeGroup['subordinates'] as $subordinate) {
+                        $employeeGroupArray[$employeeGroup['id']]['child'] = $this->getTreeUsers($subordinate['id']);
                     }
                 }
                 //subordinates
-                $response[$user->id]['groups'][$group->id] = [
-                    'name' => $group->name,
+                $response[$user['id']]['groups'][$group['id']] = [
+                    'name' => $group['name'],
                     'employees' => $employeeGroupArray,
                 ];
             }
-            $response[$user->id]['child'] = $this->getTreeUsers($user->id);
+            $response[$user['id']['child'] = $this->getTreeUsers($user['id'])];
         }
         return $response;
     }
@@ -93,7 +93,7 @@ class CompanyController extends Controller
     {
         static $employeeUsed;
         if (!isset($employeeUsed[$id])) {
-            $users = Employee::where('main_employee_id', $id)->with('subordinatesGroups.employees')->get();
+            $users = Employee::where('main_employee_id', $id)->with('subordinatesGroups.employees')->get()->toArray();
             //todo хранить только нужные данные
             $employeeUsed[$id] = $users;
         }
